@@ -6,7 +6,7 @@
 
 class LimitTest : public ::testing::Test {
 protected:
-    LimitTest() {}
+    LimitTest() = default;
 
     // Helper function to create an order
     static std::shared_ptr<Order> CreateOrder(const double size, const bool isBid) {
