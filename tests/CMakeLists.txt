@@ -8,6 +8,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(tests ${SOURCES}
     main.cpp
        core/test_limit.cpp
+       core/test_order_book.cpp
     #    core/test_order.cpp
     #    core/test_match.cpp
     #    core/test_order_book.cpp
