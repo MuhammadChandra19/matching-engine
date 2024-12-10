@@ -8,7 +8,7 @@
 
 class TestOrderBook : public ::testing::Test {
 protected:
-    TestOrderBook() {}
+    TestOrderBook() = default;
 
     // Helper function to create an order
     static std::shared_ptr<Order> CreateOrder(int64_t id, int64_t user_id, double size, bool isBid, std::shared_ptr<Limit> limit, int64_t timestamp) {
@@ -59,9 +59,9 @@ TEST_F(TestOrderBook, CancelOrder) {
     // Place an order
     PlaceOrder(orderbook, 100.0, 10.0, false, "1", 12345, 1678901234);
     PlaceOrder(orderbook, 100.0, 5.0, false, "2", 12346, 1678901244);
+    PlaceOrder(orderbook, 100.0, 5.0, false, "3", 12346, 1678901244);
 
-    const auto order = CreateOrder(3, 12347, 5.0, false, nullptr, 1678901254);
-    orderbook.CancelOrder(order);  // Trying to cancel an order that hasn't been placed
+    orderbook.CancelOrder(3);  // Trying to cancel an order that hasn't been placed
 
     // Check if the order is removed
     ASSERT_EQ(orderbook.Orders.size(), 2);  // The orderbook should have 2 orders still placed
@@ -105,10 +105,10 @@ TEST_F(TestOrderBook, ClearLimit) {
     // Place some orders
     PlaceOrder(orderbook, 100.0, 10.0, false, "1", 12345, 1678901234);
     PlaceOrder(orderbook, 99.0, 5.0, false, "2", 12346, 1678901244);
+    PlaceOrder(orderbook, 99.0, 5.0, true, "3", 12346, 1678901244);
 
     // Cancel the bid order
-    auto bidOrder = CreateOrder(2, 12347, 5.0, true, nullptr, 1678901254);
-    orderbook.CancelOrder(bidOrder);
+    orderbook.CancelOrder(3);
 
     // Verify that the empty limit is cleared
     ASSERT_TRUE(orderbook.BidLimits.empty());  // Bid limit should be removed

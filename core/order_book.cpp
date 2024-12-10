@@ -25,12 +25,13 @@ double OrderBook::BidTotalVolume() const {
 }
 
 // Cancel an existing order
-void OrderBook::CancelOrder(const std::shared_ptr<Order>& order) {
-    const auto match_order = Orders.find(order->ID);
+void OrderBook::CancelOrder(const int64_t orderID) {
+    const auto match_order = Orders.find(orderID);
     if (match_order == Orders.end()) {
         return; // Order not found
     }
 
+    const auto& order = match_order->second;
     if (const auto limit = order->LimitPtr) {
         limit->DeleteOrder(order);
 

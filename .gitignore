@@ -145,3 +145,4 @@ ipch/
 # Visual Studio Trace Files
 *.e2e
 .idea
+cmake-build-debug

@@ -28,7 +28,7 @@ public:
     // Core methods
     [[nodiscard]] double AskTotalVolume() const;
     [[nodiscard]] double BidTotalVolume() const;
-    void CancelOrder(const std::shared_ptr<Order>& order);
+    void CancelOrder(int64_t orderID);
     void PlaceLimitOrder(double price, const std::shared_ptr<Order>& order);
     std::vector<Match> PlaceMarketOrder(const std::shared_ptr<Order>& order);
     std::shared_ptr<Limit> FindOrCreateLimit(double price, bool isBid);
