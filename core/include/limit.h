@@ -4,16 +4,16 @@
 
 #ifndef LIMIT_H
 #define LIMIT_H
-#include <memory>
+
 #include <vector>
 #include "order.h"
 #include "match.h"
 
 class Limit : public std::enable_shared_from_this<Limit> {
 public:
-    double Price;
-    double TotalVolume;
-    std::vector<std::shared_ptr<Order>> OrderList;
+    double price;
+    double totalVolume;
+    std::vector<std::shared_ptr<Order>> orderList;
 
     explicit Limit(double price);
     void AddOrder(const std::shared_ptr<Order>& order);

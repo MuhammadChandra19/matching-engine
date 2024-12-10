@@ -75,9 +75,9 @@ TEST_F(TestOrderBook, PlaceLimitOrder) {
     PlaceOrder(orderbook, 100.0, 10.0, false, "1", 12345, 1678901234);
 
     // Check if the limit has been added
-    auto limit = orderbook.Asks.front();
-    ASSERT_EQ(limit->TotalVolume, 10.0);
-    ASSERT_EQ(limit->OrderList.size(), 1);
+    auto limit = orderbook.asks.front();
+    ASSERT_EQ(limit->totalVolume, 10.0);
+    ASSERT_EQ(limit->orderList.size(), 1);
 }
 
 // Test PlaceMarketOrder method
@@ -94,8 +94,8 @@ TEST_F(TestOrderBook, PlaceMarketOrder) {
 
     // Verify that the market order was filled
     ASSERT_EQ(matches.size(), 2);
-    ASSERT_DOUBLE_EQ(matches[0].SizeFilled, 5.0);
-    ASSERT_EQ(marketOrder->Size, 0.0);  // The market order should be fully filled
+    ASSERT_DOUBLE_EQ(matches[0].sizeFilled, 5.0);
+    ASSERT_EQ(marketOrder->size, 0.0);  // The market order should be fully filled
 }
 
 // Test clearLimit method (removes empty limits)
@@ -111,7 +111,7 @@ TEST_F(TestOrderBook, ClearLimit) {
     orderbook.CancelOrder(3);
 
     // Verify that the empty limit is cleared
-    ASSERT_TRUE(orderbook.BidLimits.empty());  // Bid limit should be removed
+    ASSERT_TRUE(orderbook.bidLimits.empty());  // Bid limit should be removed
 }
 
 // Test FindOrCreateLimit method

@@ -9,18 +9,20 @@
 
 #include <string>
 
-class TradeConsumer {
+class TradeConsumer
+{
 public:
     // Constructor: accepts Kafka broker list and topic to subscribe to
-    TradeConsumer(const std::string& brokers, const std::string& topic, const std::string& groupID);
-
+    TradeConsumer(const std::string &brokers, const std::string &topic);
     // Starts the consumer to consume messages in a loop
     void start();
 
     // Destructor to clean up resources
     ~TradeConsumer();
 private:
-
+    static bool stopFlag_;
+    std::string topic_;
+    kafka::Properties consumerConfig_;  // Kafka consumer config
 };
 
 #endif //TRADE_CONSUMER_H

@@ -4,13 +4,13 @@
 
 #include "order.h"
 
-Order::Order(int64_t order_id,
-             const int64_t user_id,
+Order::Order(int64_t orderID,
+             const int64_t userID,
              const double size,
              const bool bid, std::shared_ptr<Limit> limit, const int64_t timestamp)
-    : ID(order_id), UserID(user_id), Size(size), Bid(bid), LimitPtr(std::move(limit)), Timestamp(timestamp) {}
+    : id(orderID), userID(userID), size(size), bid(bid), limitPtr(std::move(limit)), timestamp(timestamp) {}
 
 bool Order::IsFilled() const
 {
-    return Size == 0.0;
+    return size == 0.0;
 }

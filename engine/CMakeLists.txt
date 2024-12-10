@@ -19,4 +19,4 @@ add_executable(matching-engine
 # Add include directory for public headers
 target_include_directories(matching-engine PUBLIC include)
 
-target_link_libraries(matching-engine PRIVATE core kafka)
+target_link_libraries(matching-engine PRIVATE core modern-cpp-kafka-api)

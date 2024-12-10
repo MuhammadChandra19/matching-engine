@@ -9,12 +9,12 @@
 
 class Match {
 public:
-    std::shared_ptr<Order> Ask;
-    std::shared_ptr<Order> Bid;
-    double SizeFilled;
+    std::shared_ptr<Order> ask;
+    std::shared_ptr<Order> bid;
+    double sizeFilled;
     double Price;
 
-    Match(std::shared_ptr<Order> ask, std::shared_ptr<Order> bid, double size_filled, double price);
+    Match(std::shared_ptr<Order> ask, std::shared_ptr<Order> bid, double sizeFilled, double price);
 };
 
 

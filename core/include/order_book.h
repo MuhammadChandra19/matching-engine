@@ -15,13 +15,16 @@
 class OrderBook {
 public:
     // Containers for ask and bid limits
-    Limits Asks;
-    Limits Bids;
+    Limits asks;
+    Limits bids;
 
     // Maps for fast lookup
-    std::map<double, std::shared_ptr<Limit>> AskLimits;
-    std::map<double, std::shared_ptr<Limit>> BidLimits;
+    std::map<double, std::shared_ptr<Limit>> askLimits;
+    std::map<double, std::shared_ptr<Limit>> bidLimits;
     std::unordered_map<int64_t, std::shared_ptr<Order>> Orders;
+
+    int64_t logOffset;
+    int64_t logSeq;
 
     OrderBook();
 
@@ -37,7 +40,7 @@ public:
     // Getters for sorted limits
     [[nodiscard]] Limits GetAsks() const
     {
-        Limits sortedAsks = Asks;
+        Limits sortedAsks = asks;
 
         std::ranges::sort(sortedAsks, [](std::shared_ptr<Limit>& a, std::shared_ptr<Limit>& b) {
             return a->Price < b->Price;
@@ -47,7 +50,7 @@ public:
     }
     [[nodiscard]] Limits GetBids() const
     {
-        Limits sortedBids = Bids;
+        Limits sortedBids = bids;
 
         std::ranges::sort(sortedBids, [](std::shared_ptr<Limit>& a, std::shared_ptr<Limit>& b) {
             return a->Price > b->Price;
