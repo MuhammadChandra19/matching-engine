@@ -1,6 +1,5 @@
 #include <matching_service.h>
 #include "trade_consumer.h"
-#include <iostream>
 
 
 // int main(const int argc, char* argv[]) {
@@ -8,7 +7,7 @@
 //         std::cerr << "Usage: " << argv[0] << " <topic>" << '\n';
 //         return 1;
 //     }
-int main(const int argc, char* argv[]) {
+int main() {
 
     std::string const topic = "eth-btc";
     // Initialize and run the pair processor

@@ -40,6 +40,6 @@ std::vector<Match> MatchingService::handlePlaceOrder(const PlaceOrderRequest& pl
     return matches;
 }
 
-void MatchingService::handleCancelOrder(int64_t orderID) {
-    orderBook.CancelOrder(orderID);
+void MatchingService::handleCancelOrder(const CancelOrderRequest request) {
+    orderBook.CancelOrder(request.orderId);
 }

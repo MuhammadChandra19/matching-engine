@@ -1,7 +1,10 @@
 #include "trade_consumer.h"
-#include <iostream>
+#include <cancel_order_request.h>
 #include <csignal>
+#include <iostream>
 #include <matching_service.h>
+#include <place_order_request.h>
+#include <string_helper.h>
 
 bool TradeConsumer::stopFlag_ = false;
 
@@ -34,8 +37,21 @@ void TradeConsumer::start() {
                 } else {
                     if (!records.empty())
                     {
-                        std::cout << "[" << topic_ << "] Received message: "
-                            << record.value().toString() << '\n';
+                        std::string const message = record.value().toString();
+                        std::cout << message << '\n';
+                        if (auto kvPairs = StringHelper::parseKeyValue(message); kvPairs["type"] == "place_order")
+                        {
+                            PlaceOrderRequest const request = parsePlaceOrder(kvPairs);
+                            matchingService.handlePlaceOrder(request);
+
+                        } else if (kvPairs["type"] == "cancel_order")
+                        {
+                            CancelOrderRequest const cancelOrder = parseCancelOrder(kvPairs);
+                            matchingService.handleCancelOrder(cancelOrder);
+                        } else
+                        {
+                            std::cerr << "Unknown message type: " << kvPairs["type"] << '\n';
+                        }
                         consumer.commitAsync();
                     }
                 }

@@ -6,10 +6,11 @@
 #define MATCHING_SERVICE_H
 
 #include <cstdint>
-#include <string>
 #include <vector>
 #include "match.h"
 #include "order_book.h"
+#include "place_order_request.h"
+#include "cancel_order_request.h"
 
 
 struct LiveOrder {
@@ -20,15 +21,6 @@ struct LiveOrder {
     int64_t timestamp;
 };
 
-struct PlaceOrderRequest {
-    int64_t id;
-    int64_t userId;
-    int orderType;
-    bool bid;
-    double size;
-    double price;
-    std::string pair;
-};
 
 struct  OrderBookData
 {
@@ -47,7 +39,7 @@ class MatchingService {
         static void initMatchingService();
 
         std::vector<Match>  handlePlaceOrder(const PlaceOrderRequest& placeOrderRequest);
-        void handleCancelOrder(int64_t orderID);
+        void handleCancelOrder(CancelOrderRequest request);
 };
 
 #endif //MATCHING_SERVICE_H

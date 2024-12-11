@@ -12,3 +12,4 @@ target_include_directories(core PUBLIC include)
 
 # Link required libraries (if any)
 # target_link_libraries(core ...)
+target_link_libraries(core PRIVATE  helper)
