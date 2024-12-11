@@ -2,6 +2,7 @@
 #include <cancel_order_request.h>
 #include <csignal>
 #include <iostream>
+#include <utility>
 #include <matching_service.h>
 #include <place_order_request.h>
 #include <string_helper.h>
@@ -9,14 +10,15 @@
 bool TradeConsumer::stopFlag_ = false;
 
 // Constructor: Initializes the Kafka consumer with provided brokers and topic
-TradeConsumer::TradeConsumer(const MatchingService& service, const std::string &brokers, const std::string &topic)
-    : matchingService(service), topic_(topic)
+TradeConsumer::TradeConsumer(const MatchingService& service, const std::string &brokers, std::string topic)
+    : matchingService(service), topic_(std::move(topic))
 {
     // Setup Kafka consumer configuration
-    const kafka::Properties props({{"bootstrap.servers",    {brokers}},
-                            {"api.version.request", {"false"}},
+    const kafka::Properties props({
+        {"bootstrap.servers",    {brokers}},
+        {"api.version.request", {"false"}},
         {"enable.auto.commit", {"false"}},
-                            });
+    });
     consumerConfig_ = props;
 
     // Setup signal handling for graceful shutdown

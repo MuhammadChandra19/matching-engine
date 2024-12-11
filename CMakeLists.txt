@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.5)
 
 project(CryptoExchange VERSION 1.0 LANGUAGES CXX)
 
@@ -16,8 +16,7 @@ if(ENABLE_CLANG_TIDY)
     endif()
 endif()
 
-# Fetch external libraries
-include(FetchContent)
+include(cmake/fetch_packages.cmake)
 
 enable_testing()
 
