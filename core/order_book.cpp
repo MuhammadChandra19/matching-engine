@@ -91,8 +91,8 @@ void OrderBook::clearLimit(const bool bid, const std::shared_ptr<Limit>& limit) 
     auto& limitMap = bid ? bidLimits : askLimits;
     auto& limitsList = bid ? bids : asks;
 
-    limitMap.erase(limit->Price);
-    std::erase_if(limitsList, [&limit](const auto &lim) { return lim->Price == limit->Price; });
+    limitMap.erase(limit->price);
+    std::erase_if(limitsList, [&limit](const auto &lim) { return lim->price == limit->price; });
 }
 
 // Find or create a new limit for a given price

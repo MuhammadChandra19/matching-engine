@@ -23,6 +23,7 @@ public:
     std::map<double, std::shared_ptr<Limit>> bidLimits;
     std::unordered_map<int64_t, std::shared_ptr<Order>> Orders;
 
+    int64_t seq;
     int64_t logOffset;
     int64_t logSeq;
 
@@ -43,7 +44,7 @@ public:
         Limits sortedAsks = asks;
 
         std::ranges::sort(sortedAsks, [](std::shared_ptr<Limit>& a, std::shared_ptr<Limit>& b) {
-            return a->Price < b->Price;
+            return a->price < b->price;
         });
 
         return sortedAsks;
@@ -53,7 +54,7 @@ public:
         Limits sortedBids = bids;
 
         std::ranges::sort(sortedBids, [](std::shared_ptr<Limit>& a, std::shared_ptr<Limit>& b) {
-            return a->Price > b->Price;
+            return a->price > b->price;
         });
 
         return sortedBids;
