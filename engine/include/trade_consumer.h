@@ -9,8 +9,7 @@
 #include <matching_service.h>
 #include <string>
 
-class TradeConsumer
-{
+class TradeConsumer {
 public:
     MatchingService matchingService;
     // Constructor: accepts Kafka broker list and topic to subscribe to

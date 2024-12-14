@@ -5,11 +5,20 @@
 #ifndef ORDER_H
 #define ORDER_H
 
-#include <memory>
 #include <vector>
 #include <cstdint>
 
 class Limit;
+
+struct BookOrder
+{
+    int64_t orderID;
+    double size;
+    bool bid;
+    double price;
+    int64_t userID;
+    int64_t timeStamp;
+};
 
 class Order {
 public:

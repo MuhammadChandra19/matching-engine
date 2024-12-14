@@ -119,3 +119,38 @@ void OrderBook::removeEmptyLimit(const double price, const bool isBid) {
         limitMap.erase(match_limit);
     }
 }
+
+OrderBookSnapshot OrderBook::CreateSnapshot() const
+{
+    OrderBookSnapshot snapshot;
+    for (const auto &[fst, snd] : Orders)
+    {
+        snapshot.orders.push_back(BookOrder{
+            .orderID = fst,
+            .size = snd->size,
+            .bid = snd->bid,
+            .price = snd->limitPtr->price,
+        });
+
+    }
+    snapshot.logSeq = logSeq;
+    snapshot.tradeSeq = tradeSeq;
+    return  snapshot;
+}
+
+void OrderBook::Restore(const OrderBookSnapshot &snapshot)
+{
+    for (const auto& snapshotOrder : snapshot.orders)
+    {
+        auto order = std::make_shared<Order>(
+            snapshotOrder.orderID,
+            snapshotOrder.price,
+            snapshotOrder.size,
+            snapshotOrder.bid,
+            nullptr,
+            snapshotOrder.timeStamp
+            );
+        PlaceLimitOrder(snapshotOrder.orderID, order);
+    }
+}
+
