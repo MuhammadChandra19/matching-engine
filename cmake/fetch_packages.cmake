@@ -32,4 +32,9 @@ FetchContent_Declare(
         GIT_TAG        1.3.8
 )
 
+include(FetchContent)
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 FetchContent_MakeAvailable(redis_plus_plus)

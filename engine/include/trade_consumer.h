@@ -11,9 +11,9 @@
 
 class TradeConsumer {
 public:
-    MatchingService matchingService;
+    MatchingService *matchingService;
     // Constructor: accepts Kafka broker list and topic to subscribe to
-    TradeConsumer(const MatchingService& service, const std::string &brokers, std::string topic);
+    TradeConsumer(MatchingService *service, const std::string &brokers, std::string topic);
     // Starts the consumer to consume messages in a loop
     void start();
     static void stop(int sig);

@@ -1,6 +1,8 @@
 add_executable(matching-engine
         main.cpp
         trade_consumer.cpp
+        engine.cpp
+        redis_snapshot_store.cpp
 )
 
 # Add the Redis++ include directory.
@@ -14,4 +16,5 @@ target_link_libraries(matching-engine PRIVATE
         modern-cpp-kafka-api
         hiredis-src
         redis-plus-plus-src/src
+        nlohmann_json::nlohmann_json
 )

@@ -1,7 +1,6 @@
 //
 // Created by Muhammad chandra zulfikar on 10/12/24.
 //
-
 #include "order_book.h"
 #include <algorithm>
 #include <numeric>
@@ -153,4 +152,3 @@ void OrderBook::Restore(const OrderBookSnapshot &snapshot)
         PlaceLimitOrder(snapshotOrder.orderID, order);
     }
 }
-

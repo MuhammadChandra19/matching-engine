@@ -7,6 +7,9 @@
 
 #include <vector>
 #include <cstdint>
+#include <nlohmann/json.hpp>
+
+
 
 class Limit;
 
@@ -18,6 +21,7 @@ struct BookOrder
     double price;
     int64_t userID;
     int64_t timeStamp;
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(BookOrder, orderID, size, bid, price, userID, timeStamp)
 };
 
 class Order {

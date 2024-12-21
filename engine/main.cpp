@@ -11,9 +11,9 @@ int main() {
 
     std::string const topic = "eth-btc";
     // Initialize and run the pair processor
-    MatchingService const service;
+    const auto service = std::make_unique<MatchingService>();
 
-    TradeConsumer tradeConsumer(service, "localhost:19092", topic);
+    TradeConsumer tradeConsumer(service.get(), "localhost:19092", topic);
     tradeConsumer.start();
 
 }

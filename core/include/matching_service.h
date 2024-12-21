@@ -36,7 +36,7 @@ class MatchingService {
         MatchingService();
         ~MatchingService();
 
-        static void initMatchingService();
+        void initMatchingService();
 
         std::vector<Match>  handlePlaceOrder(const PlaceOrderRequest& placeOrderRequest);
         void handleCancelOrder(CancelOrderRequest request);

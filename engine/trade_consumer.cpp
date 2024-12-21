@@ -6,13 +6,16 @@
 #include <matching_service.h>
 #include <place_order_request.h>
 #include <string_helper.h>
+#include <sw/redis++/redis++.h>
 
 bool TradeConsumer::stopFlag_ = false;
 
 // Constructor: Initializes the Kafka consumer with provided brokers and topic
-TradeConsumer::TradeConsumer(const MatchingService& service, const std::string &brokers, std::string topic)
+TradeConsumer::TradeConsumer(MatchingService *service, const std::string &brokers, std::string topic)
     : matchingService(service), topic_(std::move(topic))
 {
+
+
     // Setup Kafka consumer configuration
     const kafka::Properties props({
         {"bootstrap.servers",    {brokers}},
@@ -20,7 +23,7 @@ TradeConsumer::TradeConsumer(const MatchingService& service, const std::string &
         {"enable.auto.commit", {"false"}},
     });
     consumerConfig_ = props;
-
+    auto redis = sw::redis::Redis("");
     // Setup signal handling for graceful shutdown
     std::signal(SIGINT, stop);
 }
@@ -44,12 +47,13 @@ void TradeConsumer::start() {
                         if (auto kvPairs = StringHelper::parseKeyValue(message); kvPairs["type"] == "place_order")
                         {
                             PlaceOrderRequest const request = parsePlaceOrder(kvPairs);
-                            matchingService.handlePlaceOrder(request);
+                            matchingService->handlePlaceOrder(request);
+
 
                         } else if (kvPairs["type"] == "cancel_order")
                         {
                             CancelOrderRequest const cancelOrder = parseCancelOrder(kvPairs);
-                            matchingService.handleCancelOrder(cancelOrder);
+                            matchingService->handleCancelOrder(cancelOrder);
                         } else
                         {
                             std::cerr << "Unknown message type: " << kvPairs["type"] << '\n';

@@ -9,7 +9,7 @@
 #include "match.h"
 #include <map>
 #include <unordered_map>
-#include <memory>
+#include <nlohmann/json.hpp>
 #include <vector>
 
 // Structure to capture a snapshot of the current order book state
@@ -17,6 +17,8 @@ struct OrderBookSnapshot {
     std::vector<BookOrder> orders; // List of all orders in the snapshot
     int64_t tradeSeq;             // Trade sequence number at the snapshot time
     int64_t logSeq;               // Log sequence number at the snapshot time
+
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(OrderBookSnapshot, orders, tradeSeq, logSeq)
 };
 
 class OrderBook {
