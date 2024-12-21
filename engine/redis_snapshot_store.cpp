@@ -33,10 +33,11 @@ Snapshot RedisSnapshotStore::loadStore()
         Snapshot deserializedSnapshot = nlohmann::json::parse(*snapshot).get<Snapshot>();
 
         return deserializedSnapshot;
-
-    } catch (const sw::redis::Error &e)
+    }
+    catch (const sw::redis::Error &e)
     {
         std::cerr << e.what() << '\n';
     }
+    return {};
 }
 
