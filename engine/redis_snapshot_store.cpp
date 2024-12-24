@@ -16,7 +16,7 @@ void RedisSnapshotStore::store(const Snapshot& snapshot)
 {
     try
     {
-        std::string jsonString = nlohmann::json(snapshot).dump();
+        const std::string jsonString = nlohmann::json(snapshot).dump();
         constexpr std::chrono::milliseconds ttl(7 * 24 * 60 * 60 * 1000);
         redisClient.set(pair, jsonString,  ttl);
     } catch (const sw::redis::Error &e)
@@ -30,7 +30,7 @@ Snapshot RedisSnapshotStore::loadStore()
     try
     {
         auto snapshot = redisClient.get(pair);
-        Snapshot deserializedSnapshot = nlohmann::json::parse(*snapshot).get<Snapshot>();
+        auto deserializedSnapshot = nlohmann::json::parse(*snapshot).get<Snapshot>();
 
         return deserializedSnapshot;
     }

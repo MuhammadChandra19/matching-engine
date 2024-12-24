@@ -10,15 +10,14 @@ MatchingService::~MatchingService() {
     std::cout << "MatchingService Destroyed." << '\n';
 }
 MatchingService::MatchingService() {
+    orderBook = std::make_unique<OrderBook>();
     std::cout << "MatchingService Constructor." << '\n';
 }
-void MatchingService::initMatchingService() {
-    std::cout << "MatchingService Initialization." << '\n';
-}
 
-std::vector<Match> MatchingService::handlePlaceOrder(const PlaceOrderRequest& placeOrderRequest) {
+std::vector<Match> MatchingService::handlePlaceOrder(const PlaceOrderRequest& placeOrderRequest) const
+{
     std::vector<Match> matches;
-    const auto limit = orderBook.FindOrCreateLimit(placeOrderRequest.price, placeOrderRequest.bid);
+    const auto limit = orderBook->FindOrCreateLimit(placeOrderRequest.price, placeOrderRequest.bid);
     auto const order = std::make_shared<Order>(
         placeOrderRequest.id,
         placeOrderRequest.userId,
@@ -31,15 +30,15 @@ std::vector<Match> MatchingService::handlePlaceOrder(const PlaceOrderRequest& pl
     );
 
     if (placeOrderRequest.orderType == 0) {
-        orderBook.PlaceLimitOrder(placeOrderRequest.price, order);
+        orderBook->PlaceLimitOrder(placeOrderRequest.price, order);
     }
 
     if (placeOrderRequest.orderType == 1) {
-        matches = orderBook.PlaceMarketOrder(order);
+        matches = orderBook->PlaceMarketOrder(order);
     }
     return matches;
 }
 
-void MatchingService::handleCancelOrder(const CancelOrderRequest request) {
-    orderBook.CancelOrder(request.orderId);
+void MatchingService::handleCancelOrder(const CancelOrderRequest request) const {
+    orderBook->CancelOrder(request.orderId);
 }

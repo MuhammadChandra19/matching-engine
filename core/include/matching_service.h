@@ -32,14 +32,12 @@ struct  OrderBookData
 
 class MatchingService {
     public:
-        OrderBook orderBook;
+        std::shared_ptr<OrderBook> orderBook;
         MatchingService();
         ~MatchingService();
 
-        void initMatchingService();
-
-        std::vector<Match>  handlePlaceOrder(const PlaceOrderRequest& placeOrderRequest);
-        void handleCancelOrder(CancelOrderRequest request);
+        [[nodiscard]] std::vector<Match>  handlePlaceOrder(const PlaceOrderRequest& placeOrderRequest) const;
+        void handleCancelOrder(CancelOrderRequest request) const;
 };
 
 #endif //MATCHING_SERVICE_H

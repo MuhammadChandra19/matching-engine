@@ -58,7 +58,7 @@ public:
     std::shared_ptr<Limit> FindOrCreateLimit(double price, bool isBid);
 
     // Creates a snapshot of the current order book state
-    OrderBookSnapshot CreateSnapshot() const;
+    [[nodiscard]] OrderBookSnapshot CreateSnapshot() const;
 
     // Restores the order book to a previously captured snapshot
     void Restore(const OrderBookSnapshot &snapshot);

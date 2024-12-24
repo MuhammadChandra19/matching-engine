@@ -13,7 +13,7 @@ int main() {
     // Initialize and run the pair processor
     const auto service = std::make_unique<MatchingService>();
 
-    TradeConsumer tradeConsumer(service.get(), "localhost:19092", topic);
-    tradeConsumer.start();
+    // TradeConsumer tradeConsumer(service.get(), "localhost:19092", topic);
+    // tradeConsumer.start();
 
 }

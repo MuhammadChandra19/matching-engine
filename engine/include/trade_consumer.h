@@ -11,9 +11,8 @@
 
 class TradeConsumer {
 public:
-    MatchingService *matchingService;
     // Constructor: accepts Kafka broker list and topic to subscribe to
-    TradeConsumer(MatchingService *service, const std::string &brokers, std::string topic);
+    TradeConsumer(MatchingService *service, const std::string &brokers, std::string topic, int64_t lastOffset);
     // Starts the consumer to consume messages in a loop
     void start();
     static void stop(int sig);
@@ -22,8 +21,10 @@ public:
     ~TradeConsumer();
 private:
     static bool stopFlag_;
+    MatchingService *service;
     std::string topic_;
     kafka::Properties consumerConfig_;  // Kafka consumer config
+    int64_t lastOffset_;
 };
 
 #endif //TRADE_CONSUMER_H
