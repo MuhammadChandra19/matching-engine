@@ -1,22 +1,24 @@
 //
 // Created by Muhammad chandra zulfikar on 20/12/24.
 //
- #include "engine.h"
-
+#include "engine.h"
+#include <csignal>
+bool Engine::stopFlag_ = false;
 Engine::Engine(const std::string &brokers, const std::string &topic, const std::string &redisAddress, const std::string &pair)
     :
         orderOffset(0),
-        consumer(&matchingService, brokers, topic, 0),
+        consumer(&matchingService, brokers, topic, 0, stopFlag_),
         redisSnapshotStore(pair, redisAddress)
 {
     const auto snapshot = redisSnapshotStore.loadStore();
     restore(snapshot);
 
+    // Setup signal handling for graceful shutdown
+    std::signal(SIGINT, stop);
     std::cout << "Engine Initialization." << '\n';
 };
 
 Engine::~Engine() {
-    stopFlag.store(true);
     if (consumerThread.joinable()) {
         consumerThread.join();
     }
@@ -27,8 +29,8 @@ Engine::~Engine() {
 
 void Engine::start()
 {
-    consumerThread = std::thread(&Engine::consumerThread, this);
-    snapshotThread = std::thread(&Engine::snapshotThread, this);
+    consumerThread = std::thread(&Engine::runConsumer, this);
+    snapshotThread = std::thread(&Engine::runSnapshotStore, this);
 }
 
 void Engine::restore(const Snapshot& snapshot)
@@ -46,12 +48,30 @@ void Engine::runConsumer()
 
 void Engine::runSnapshotStore()
 {
-    while (!stopFlag.load())
+    std::cout << "Snapshot executed Restore initiated" << '\n';
+    while (!stopFlag_)
     {
+        std::cout << "Snapshot executed Restore." << '\n';
         std::this_thread::sleep_for(std::chrono::seconds(30));
         const auto orderBookSnapshot = matchingService.orderBook->CreateSnapshot();
-        Snapshot const snapshot(orderBookSnapshot, orderOffset.load());
+
+        auto snapshot =  Snapshot {
+        .orderBookSnapshot=orderBookSnapshot,
+        .orderOffset = orderOffset,};
         redisSnapshotStore.store(snapshot);
+    }
+}
+
+void Engine::stop(const int sig)
+{
+    if (sig != SIGINT) { return;
+    }
+
+    if (stopFlag_) {
+        stopFlag_ = true;
+    } else {
+        // Restore the signal handler, -- to avoid stuck with this handler
+        signal(SIGINT, SIG_IGN); // NOLINT
     }
 }
 

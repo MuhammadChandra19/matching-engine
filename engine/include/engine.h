@@ -4,7 +4,7 @@
 
 #ifndef ENGINE_H
 #define ENGINE_H
-
+#include <matching_service.h>
 #include "redis_snapshot_store.h"
 #include "trade_consumer.h"
 
@@ -17,7 +17,7 @@ class Engine {
         ~Engine();
 
     private:
-        std::atomic<bool> stopFlag;
+        static bool stopFlag_;
         std::atomic<int64_t> orderOffset;
         /**
             The matchingService held by the engine, corresponding to the product.
@@ -36,6 +36,7 @@ class Engine {
         std::thread snapshotThread;
 
         void runConsumer();
+        static void stop(int sig);
         void runSnapshotStore();
         void restore(const Snapshot& snapshot);
 };

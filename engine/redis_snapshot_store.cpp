@@ -29,10 +29,13 @@ Snapshot RedisSnapshotStore::loadStore()
 {
     try
     {
-        auto snapshot = redisClient.get(pair);
-        auto deserializedSnapshot = nlohmann::json::parse(*snapshot).get<Snapshot>();
+        if (auto snapshot = redisClient.get(pair))
+        {
+            auto deserializedSnapshot = nlohmann::json::parse(*snapshot).get<Snapshot>();
+        }
 
-        return deserializedSnapshot;
+
+        return Snapshot{};
     }
     catch (const sw::redis::Error &e)
     {

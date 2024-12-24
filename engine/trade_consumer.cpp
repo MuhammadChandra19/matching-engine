@@ -1,17 +1,15 @@
 #include "trade_consumer.h"
 #include <cancel_order_request.h>
-#include <csignal>
 #include <iostream>
 #include <matching_service.h>
 #include <place_order_request.h>
 #include <string_helper.h>
 
-bool TradeConsumer::stopFlag_ = false;
-
 // Constructor: Initializes the Kafka consumer with provided brokers and topic
 TradeConsumer::TradeConsumer(MatchingService *service, const std::string &brokers, std::string topic,
-                             const int64_t lastOffset )
-    : service(service), topic_(std::move(topic)), lastOffset_(lastOffset)
+                             const int64_t lastOffset,
+                             const bool &stopFlag )
+    : service(service), topic_(std::move(topic)), lastOffset_(lastOffset), stopFlag(stopFlag)
 {
 
 
@@ -22,9 +20,6 @@ TradeConsumer::TradeConsumer(MatchingService *service, const std::string &broker
         {"enable.auto.commit", {"false"}},
     });
     consumerConfig_ = props;
-
-    // Setup signal handling for graceful shutdown
-    std::signal(SIGINT, stop);
 }
 
 // Start method to consume messages from Kafka
@@ -39,7 +34,7 @@ void TradeConsumer::start() {
     }
 
     try {
-        while (!stopFlag_) {
+        while (!stopFlag) {
             // Poll messages from Kafka brokers (timeout 100ms)
             for (auto records = consumer.poll(std::chrono::milliseconds(100)); const auto& record : records) {
                 if (record.error()) {
@@ -73,20 +68,6 @@ void TradeConsumer::start() {
         consumer.commitSync();
     } catch (const kafka::KafkaException& e) {
         std::cerr << "Kafka exception: " << e.what() << '\n';
-    }
-}
-
-// Static method to handle the stop signal
-void TradeConsumer::stop(const int sig)
-{
-    if (sig != SIGINT) { return;
-    }
-
-    if (stopFlag_) {
-        stopFlag_ = true;
-    } else {
-        // Restore the signal handler, -- to avoid stuck with this handler
-        signal(SIGINT, SIG_IGN); // NOLINT
     }
 }
 

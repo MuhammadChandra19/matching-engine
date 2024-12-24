@@ -1,9 +1,13 @@
 version: '3'
 services:
+  redis:
+    image: redis:6.2-alpine
+    ports:
+      - '6379:6379'
   kafka:
     image: confluentinc/cp-kafka:latest
     hostname: kafka
-    container_name: kafka
+    container_name: kafka-raft
     ports:
       - "9092:9092"
       - "9093:9093"
@@ -26,3 +30,4 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./data:/var/lib/kafka/data  # Store Kafka logs on your local machine.
+#    entrypoint: ["sh", "-c", "kafka-server-start /etc/kafka/server.properties & sleep 10 && kafka-topics --create --topic BTC_USDT --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1 && tail -f /dev/null"]

@@ -1,7 +1,4 @@
-#include <matching_service.h>
-#include "trade_consumer.h"
-
-
+#include "engine.h"
 // int main(const int argc, char* argv[]) {
 //     if (argc < 2) {
 //         std::cerr << "Usage: " << argv[0] << " <topic>" << '\n';
@@ -9,11 +6,12 @@
 //     }
 int main() {
 
-    std::string const topic = "eth-btc";
-    // Initialize and run the pair processor
-    const auto service = std::make_unique<MatchingService>();
+    const std::string brokers = "localhost:9092";
+    const std::string topic = "BTC_USDT";
+    const std::string redisAddress = "redis://localhost:6379";
+    const std::string pair = "BTC/USDT";
 
-    // TradeConsumer tradeConsumer(service.get(), "localhost:19092", topic);
-    // tradeConsumer.start();
+    Engine engine(brokers, topic, redisAddress, pair);
+    engine.start();
 
 }

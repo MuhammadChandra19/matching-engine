@@ -3,6 +3,7 @@
 //
 #include "order_book.h"
 #include <algorithm>
+#include <iostream>
 #include <numeric>
 
 OrderBook::OrderBook() = default;
@@ -122,13 +123,19 @@ void OrderBook::removeEmptyLimit(const double price, const bool isBid) {
 OrderBookSnapshot OrderBook::CreateSnapshot() const
 {
     OrderBookSnapshot snapshot;
+    std::cerr << "Bid Total Volume: " << BidTotalVolume() << '\n';
     for (const auto &[fst, snd] : Orders)
     {
+        std::cerr << "Order ID: " << fst << '\n';
+        std::cerr << "Size: " << snd->size << '\n';
+        std::cerr << "Bid: " << snd->bid << '\n';
+        std::cerr << "Price: " << snd->limitPtr->price << '\n';
         snapshot.orders.push_back(BookOrder{
             .orderID = fst,
             .size = snd->size,
             .bid = snd->bid,
             .price = snd->limitPtr->price,
+            .timeStamp = snd->timestamp
         });
 
     }

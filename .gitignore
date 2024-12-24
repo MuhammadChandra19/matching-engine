@@ -146,3 +146,4 @@ ipch/
 *.e2e
 .idea
 cmake-build-debug
+data

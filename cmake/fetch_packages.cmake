@@ -12,29 +12,32 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(modern-cpp-kafka)
 # Download Hiredis, upon which Redis Plus Plus depends.
-FetchContent_Declare(
-        hiredis
-        GIT_REPOSITORY https://github.com/redis/hiredis
-        GIT_TAG        v1.2.0
-        SOURCE_DIR     hiredis
-)
+FetchContent_Declare(hiredis
+        GIT_REPOSITORY https://github.com/redis/hiredis.git
+        GIT_TAG v1.2.0)
 
-FetchContent_MakeAvailable(hiredis)
-# Set include and library paths for Hiredis
-set(HIREDIS_HEADER "${hiredis_SOURCE_DIR}")
-set(HIREDIS_LIB "${hiredis_BINARY_DIR}/libhiredis.a")
-set(TEST_HIREDIS_LIB "${hiredis_BINARY_DIR}/libhiredis.a")
+if(NOT hiredis)
+    FetchContent_Populate(hiredis)
+    add_subdirectory(${hiredis_SOURCE_DIR} ${hiredis_BINARY_DIR} EXCLUDE_FROM_ALL)
+endif()
 
-# Download the Redis binding.
-FetchContent_Declare(
-        redis_plus_plus
-        GIT_REPOSITORY https://github.com/sewenew/redis-plus-plus
-        GIT_TAG        1.3.8
-)
 
-include(FetchContent)
+# <------------ add hiredis dependency --------------->
+find_path(HIREDIS_HEADER hiredis)
+include_directories(${HIREDIS_HEADER})
+
+find_library(HIREDIS_LIB hiredis)
+#target_link_libraries(target ${HIREDIS_LIB})
+
+# <------------ add redis-plus-plus dependency -------------->
+# NOTE: this should be *sw* NOT *redis++*
+find_path(REDIS_PLUS_PLUS_HEADER sw)
+include_directories(${REDIS_PLUS_PLUS_HEADER})
+#target_include_directories(target PUBLIC ${REDIS_PLUS_PLUS_HEADER})
+
+find_library(REDIS_PLUS_PLUS_LIB redis++)
+#target_link_libraries(target ${REDIS_PLUS_PLUS_LIB})
 
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
-FetchContent_MakeAvailable(redis_plus_plus)
