@@ -146,16 +146,16 @@ OrderBookSnapshot OrderBook::CreateSnapshot() const
 
 void OrderBook::Restore(const OrderBookSnapshot &snapshot)
 {
-    for (const auto& snapshotOrder : snapshot.orders)
+    for (const auto &[orderID, size, bid, price, userID, timeStamp] : snapshot.orders)
     {
         auto order = std::make_shared<Order>(
-            snapshotOrder.orderID,
-            snapshotOrder.price,
-            snapshotOrder.size,
-            snapshotOrder.bid,
+            orderID,
+            userID,
+            size,
+            bid,
             nullptr,
-            snapshotOrder.timeStamp
+            timeStamp
             );
-        PlaceLimitOrder(snapshotOrder.orderID, order);
+        PlaceLimitOrder(price, order);
     }
 }

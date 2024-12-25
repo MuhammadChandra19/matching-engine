@@ -18,6 +18,7 @@ TradeConsumer::TradeConsumer(MatchingService *service, const std::string &broker
         {"bootstrap.servers",    {brokers}},
         {"api.version.request", {"false"}},
         {"enable.auto.commit", {"false"}},
+        {"allow.auto.create.topics", {"true"}}
     });
     consumerConfig_ = props;
 }

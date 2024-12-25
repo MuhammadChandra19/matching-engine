@@ -32,6 +32,7 @@ Snapshot RedisSnapshotStore::loadStore()
         Snapshot snapshot{};
         if (auto snapshotStr = redisClient.get(pair))
         {
+            std::cout << snapshotStr.value() << '\n';
              snapshot = nlohmann::json::parse(*snapshotStr).get<Snapshot>();
         }
 
