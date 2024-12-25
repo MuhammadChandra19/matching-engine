@@ -11,8 +11,8 @@ protected:
     TestOrderBook() = default;
 
     // Helper function to create an order
-    static std::shared_ptr<Order> CreateOrder(int64_t id, int64_t user_id, double size, bool isBid, std::shared_ptr<Limit> limit, int64_t timestamp) {
-        return std::make_shared<Order>(id, user_id, size, isBid, limit, timestamp);
+    static std::shared_ptr<Order> CreateOrder(int64_t orderId, int64_t user_id, double size, bool isBid, const std::shared_ptr<Limit>& limit, int64_t timestamp) {
+        return std::make_shared<Order>(orderId, user_id, size, isBid, limit, timestamp);
     }
 
     // Helper function to create a Limit and Place an order
@@ -126,10 +126,10 @@ TEST_F(TestOrderBook, FindOrCreateLimit) {
 
     // Verify the limit is the same
     ASSERT_NE(limit, nullptr);
-    ASSERT_EQ(limit->Price, 100.0);
+    ASSERT_EQ(limit->price, 100.0);
 
     // Create another limit for a different price
     auto newLimit = orderbook.FindOrCreateLimit(101.0, false);
     ASSERT_NE(newLimit, nullptr);
-    ASSERT_EQ(newLimit->Price, 101.0);
+    ASSERT_EQ(newLimit->price, 101.0);
 }

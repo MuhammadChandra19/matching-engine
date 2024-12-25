@@ -7,7 +7,7 @@ add_executable(tests ${SOURCES}
     #    core/test_match.cpp
     #    core/test_order_book.cpp
 )
-target_link_libraries(tests PRIVATE core gtest_main)
+target_link_libraries(tests PRIVATE core gtest_main nlohmann_json)
 
 ## Consumer tests
 #add_executable(test_pair_processor
