@@ -9,7 +9,7 @@
 TradeConsumer::TradeConsumer(MatchingService *service, const std::string &brokers, std::string topic,
                              const int64_t lastOffset,
                              const bool &stopFlag )
-    : service(service), topic_(std::move(topic)), lastOffset_(lastOffset), stopFlag(stopFlag)
+    : stopFlag(stopFlag), service(service), topic_(std::move(topic)), lastOffset_(lastOffset)
 {
 
 

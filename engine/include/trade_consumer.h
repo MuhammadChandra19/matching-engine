@@ -20,7 +20,7 @@ public:
     ~TradeConsumer();
 private:
     bool stopFlag;
-    MatchingService *service;
+    MatchingService* service;
     std::string topic_;
     kafka::Properties consumerConfig_;  // Kafka consumer config
     int64_t lastOffset_;

@@ -5,8 +5,9 @@
 #include "redis_snapshot_store.h"
 #include <iostream>
 #include <nlohmann/json.hpp>
-RedisSnapshotStore::RedisSnapshotStore(const std::string pair, const std::string &address)
-    : pair(pair), redisClient(address)
+#include <utility>
+RedisSnapshotStore::RedisSnapshotStore(std::string  pair, const std::string &address)
+    : pair(std::move(pair)), redisClient(address)
 {
 
     std::cout << "RedisSnapshotStore Initialization." << '\n';

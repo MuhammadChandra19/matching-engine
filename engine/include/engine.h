@@ -23,7 +23,7 @@ class Engine {
             The matchingService held by the engine, corresponding to the product.
             It requires snapshots and recovery from snapshots.
         */
-        MatchingService matchingService;
+        std::unique_ptr<MatchingService> matchingService;
         TradeConsumer consumer;
         RedisSnapshotStore redisSnapshotStore;
 

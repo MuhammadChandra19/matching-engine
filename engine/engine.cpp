@@ -7,7 +7,7 @@ bool Engine::stopFlag_ = false;
 Engine::Engine(const std::string &brokers, const std::string &topic, const std::string &redisAddress, const std::string &pair)
     :
         orderOffset(0),
-        consumer(&matchingService, brokers, topic, 0, stopFlag_),
+        consumer(matchingService.get(), brokers, topic, 0, stopFlag_),
         redisSnapshotStore(pair, redisAddress)
 {
     const auto snapshot = redisSnapshotStore.loadStore();

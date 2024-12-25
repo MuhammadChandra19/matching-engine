@@ -10,8 +10,7 @@
 class RedisSnapshotStore {
   public:
     std::string pair;
-    explicit RedisSnapshotStore(std::string pair, const std::string &address);
-
+    RedisSnapshotStore(std::string pair, const std::string &address);
     void store(const Snapshot& snapshot);
     Snapshot loadStore();
 
