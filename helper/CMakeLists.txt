@@ -1,6 +1,7 @@
 
 add_library(helper
         string_helper.cpp
+        channel.cpp
 )
 
 # Add include directory for public headers

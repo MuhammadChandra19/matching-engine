@@ -39,6 +39,6 @@ std::vector<Match> MatchingService::handlePlaceOrder(const PlaceOrderRequest& pl
     return matches;
 }
 
-void MatchingService::handleCancelOrder(const CancelOrderRequest request) const {
-    orderBook->CancelOrder(request.orderId);
+void MatchingService::handleCancelOrder(const PlaceOrderRequest &request) const {
+    orderBook->CancelOrder(request.id);
 }

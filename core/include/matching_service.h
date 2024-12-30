@@ -37,7 +37,7 @@ class MatchingService {
         ~MatchingService();
 
         [[nodiscard]] std::vector<Match>  handlePlaceOrder(const PlaceOrderRequest& placeOrderRequest) const;
-        void handleCancelOrder(CancelOrderRequest request) const;
+        void handleCancelOrder(const PlaceOrderRequest &request) const;
 };
 
 #endif //MATCHING_SERVICE_H

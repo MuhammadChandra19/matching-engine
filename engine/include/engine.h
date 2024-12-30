@@ -4,10 +4,12 @@
 
 #ifndef ENGINE_H
 #define ENGINE_H
-#include <matching_service.h>
 #include "redis_snapshot_store.h"
 #include "trade_consumer.h"
+#include <matching_service.h>
 
+#include <channel.h>
+#include <order_reader.h>
 #include <queue>
 class Engine {
     public:
@@ -24,21 +26,22 @@ class Engine {
             It requires snapshots and recovery from snapshots.
         */
         std::unique_ptr<MatchingService> matchingService;
-        TradeConsumer consumer;
+        OrderReader orderReader;
         RedisSnapshotStore redisSnapshotStore;
 
-
-        std::mutex queueMutex;
-        std::condition_variable queueCond;
-        std::queue<std::string> orderQueue;  // Queue to hold raw order messages
-
-        std::thread consumerThread;
         std::thread snapshotThread;
+        std::thread orderReaderThread;
+        std::thread orderApplierThread;
+
+        Channel<Snapshot *> snapshotChan;
+        Channel<PlaceOrderRequest *> orderChan;
 
         void runConsumer();
         static void stop(int sig);
         void runSnapshotStore();
         void restore(const Snapshot& snapshot);
+        void runOrderReader();
+        void runOrderApplier();
 };
 
 #endif //ENGINE_H

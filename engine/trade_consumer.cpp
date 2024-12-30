@@ -53,7 +53,7 @@ void TradeConsumer::start() {
 
                         } else if (kvPairs["type"] == "cancel_order")
                         {
-                            CancelOrderRequest const cancelOrder = parseCancelOrder(kvPairs);
+                            PlaceOrderRequest const cancelOrder = parsePlaceOrder(kvPairs);
                             service->handleCancelOrder(cancelOrder);
                         } else
                         {

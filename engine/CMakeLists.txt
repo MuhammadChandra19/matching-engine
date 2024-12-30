@@ -3,6 +3,7 @@ add_executable(matching-engine
         trade_consumer.cpp
         engine.cpp
         redis_snapshot_store.cpp
+        order_reader.cpp
 )
 
 # Add include directory for public headers
