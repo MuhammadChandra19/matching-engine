@@ -5,9 +5,17 @@
 #ifndef LIMIT_H
 #define LIMIT_H
 
-#include <vector>
-#include "order.h"
 #include "match.h"
+#include "order.h"
+#include <vector>
+
+#include "log.h"
+
+struct FillResult
+{
+    std::vector<Match> matches;
+    std::vector<std::unique_ptr<Log>> logs;
+};
 
 class Limit : public std::enable_shared_from_this<Limit> {
 public:
@@ -16,9 +24,9 @@ public:
     std::vector<std::shared_ptr<Order>> orderList;
 
     explicit Limit(double price);
-    void AddOrder(const std::shared_ptr<Order>& order);
-    void DeleteOrder(const std::shared_ptr<Order>& order);
-    std::vector<Match> Fill(const std::shared_ptr<Order>& order);
+    Log* AddOrder(const std::shared_ptr<Order>& order);
+    std::unique_ptr<Log> DeleteOrder(const std::shared_ptr<Order>& order);
+    FillResult Fill(const std::shared_ptr<Order>& order);
 
 private:
     Match fillOrder(const std::shared_ptr<Order>& a_order, const std::shared_ptr<Order>& b_order) const;

@@ -5,6 +5,7 @@ add_library(core
     match.cpp
     order_book.cpp
         matching_service.cpp
+        log.cpp
 )
 
 # Add include directory for public headers

@@ -49,10 +49,10 @@ public:
     void CancelOrder(int64_t orderID);
 
     // Places a new limit order at a specific price level
-    void PlaceLimitOrder(double price, const std::shared_ptr<Order>& order);
+    Log* PlaceLimitOrder(double price, const std::shared_ptr<Order>& order);
 
     // Places a market order and matches it against existing orders
-    std::vector<Match> PlaceMarketOrder(const std::shared_ptr<Order>& order);
+    std::vector<Log> PlaceMarketOrder(const std::shared_ptr<Order>& order);
 
     // Finds an existing limit or creates a new one at the specified price level
     std::shared_ptr<Limit> FindOrCreateLimit(double price, bool isBid);

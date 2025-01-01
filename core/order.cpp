@@ -14,3 +14,10 @@ bool Order::IsFilled() const
 {
     return size == 0.0;
 }
+
+int64_t Order::NextLogSeq()
+{
+    sequence += 1;
+    return sequence;
+}
+

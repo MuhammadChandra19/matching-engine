@@ -3,22 +3,42 @@
 //
 #include "limit.h"
 #include <algorithm>
+#include "log.h"
 
 Limit::Limit(const double price) : price(price), totalVolume(0.0) {}
 
-void Limit::AddOrder(const std::shared_ptr<Order>& order) {
+Log* Limit::AddOrder(const std::shared_ptr<Order>& order) {
     orderList.push_back(order);
     totalVolume += order->size;
     // Ensure the order's LimitPtr points back to this Limit instance
     order->limitPtr = shared_from_this();
+
+    auto *const log = new OpenLog(
+            order->NextLogSeq(),
+            "PAIR",
+            order->id,
+            order->size,
+            order->limitPtr->price,
+            order->bid
+        );
+    return log;
 }
 
-void Limit::DeleteOrder(const std::shared_ptr<Order>& order) {
+std::unique_ptr<Log> Limit::DeleteOrder(const std::shared_ptr<Order>& order) {
     if (const auto shared_ptr = std::ranges::find(orderList, order); shared_ptr != orderList.end()) {
         // Replace the found order with the last order
         *shared_ptr = orderList.back();
         orderList.pop_back();  // Remove the last order
     }
+    auto log = std::make_unique<DoneLog>(
+        order->NextLogSeq(),
+        "PAIR",
+        order->id,
+        order->size,
+        order->limitPtr->price,
+        "Reason",
+        order->bid
+    );
 
     // Set the limit reference of the order to nullptr
     order->limitPtr = nullptr;
@@ -27,12 +47,13 @@ void Limit::DeleteOrder(const std::shared_ptr<Order>& order) {
     std::ranges::sort(orderList, [](const std::shared_ptr<Order>& lhs, const std::shared_ptr<Order>& rhs) {
         return lhs->timestamp < rhs->timestamp;
     });
-
+    return log;
 }
 
-std::vector<Match> Limit::Fill(const std::shared_ptr<Order>& order) {
+FillResult Limit::Fill(const std::shared_ptr<Order>& order) {
     std::vector<Match> matches;
     std::vector<std::shared_ptr<Order>> ordersToDelete;
+    std::vector<std::unique_ptr<Log>> logs;
 
     for (const auto& orderPtr : orderList)
     {
@@ -40,6 +61,15 @@ std::vector<Match> Limit::Fill(const std::shared_ptr<Order>& order) {
         matches.push_back(match);
 
         totalVolume -= match.sizeFilled;
+
+        std::unique_ptr<Log> const log = std::make_unique<MatchLog> (
+            orderPtr->NextLogSeq(),
+            "PAIR",
+            order->id,
+            orderPtr->id,
+            orderPtr->limitPtr->price,
+            orderPtr->size);
+        logs.push_back(log);
 
         if (orderPtr->IsFilled())
         {
@@ -54,11 +84,12 @@ std::vector<Match> Limit::Fill(const std::shared_ptr<Order>& order) {
 
     for (const auto& orderPtr : ordersToDelete)
     {
-        DeleteOrder(orderPtr);
+        auto deleteLog = DeleteOrder(orderPtr);
+        logs.push_back(deleteLog);
     }
 
 
-    return matches;
+    return FillResult{.matches=matches, .logs=logs};
 }
 
 Match Limit::fillOrder(const std::shared_ptr<Order>& a_order, const std::shared_ptr<Order>& b_order) const

@@ -2,7 +2,6 @@
 // Created by Muhammad chandra zulfikar on 10/12/24.
 //
 #include "order_book.h"
-#include <algorithm>
 #include <iostream>
 #include <numeric>
 
@@ -45,16 +44,17 @@ void OrderBook::CancelOrder(const int64_t orderID) {
 }
 
 // Place a limit order
-void OrderBook::PlaceLimitOrder(const double price, const std::shared_ptr<Order>& order) {
+Log* OrderBook::PlaceLimitOrder(const double price, const std::shared_ptr<Order>& order) {
     const auto limit = FindOrCreateLimit(price, order->bid);
     order->limitPtr = limit;
-    limit->AddOrder(order);
+    auto *const log = limit->AddOrder(order);
     Orders[order->id] = order;
+    return log;
 }
 
 // Place a market order and match it with existing orders
-std::vector<Match> OrderBook::PlaceMarketOrder(const std::shared_ptr<Order>& order) {
-    std::vector<Match> matches;
+std::vector<Log> OrderBook::PlaceMarketOrder(const std::shared_ptr<Order>& order) {
+    std::vector<Log> logs;
     const auto & limits = order->bid ? GetAsks() : GetBids(); // Select the opposite side of the orderbook
 
     if (order->bid)
@@ -62,28 +62,30 @@ std::vector<Match> OrderBook::PlaceMarketOrder(const std::shared_ptr<Order>& ord
         if (order->size > AskTotalVolume())
         {
             // not enough volume
-            return matches;
+            return logs;
         }
     } else
     {
         if (order->size > BidTotalVolume())
         {
             // not enough volume
-            return matches;
+            return logs;
         }
     }
 
     for (const auto& limit : limits)
     {
-        std::vector<Match> limit_matches = limit->Fill(order);
-        matches.insert(matches.end(), limit_matches.begin(), limit_matches.end());
+        auto [matches, logs] = limit->Fill(order);
+        matches.insert(matches.end(), matches.begin(), matches.end());
         if (limit->orderList.empty())
         {
             clearLimit(order->bid, limit);
         }
+
+        logs.push_back(logs...);
     }
 
-    return matches;
+    return logs;
 }
 
 // Clear an empty limit from the orderbook
